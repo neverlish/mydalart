@@ -12,7 +12,7 @@ class TaskArgs {
 export class TaskResolver {
   constructor(private taskService: TaskService) { }
 
-  @Query(() => Task, { nullable: true })
+  @Query(() => Task)
   task(@Args() args: TaskArgs) {
     return this.taskService.getTask(args.id)
   }

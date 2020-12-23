@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { TreeRepository } from 'typeorm'
 import { Task, TaskList } from './task.entity'
@@ -10,15 +10,14 @@ export class TaskService {
     private taskRepository: TreeRepository<Task>,
   ) { }
 
-  async getTask(id: string): Promise<Task | null> {
+  async getTask(id: string): Promise<Task> {
     const result = await this.taskRepository.findOne({ where: { id }, relations: ['user'] })
     if (result) {
       const { children } = await this.taskRepository.findDescendantsTree(result)
       const { parent } = await this.taskRepository.findAncestorsTree(result)
       return { ...result, children, parent };
     } else {
-      // TODO: 데이터가 없는 경우 Exception 던짐
-      return result
+      throw new NotFoundException('찾을 수 없는 태스크입니다.');
     }
   }
 
