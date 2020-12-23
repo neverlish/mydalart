@@ -7,6 +7,5 @@ export const dbConfig: TypeOrmModuleOptions = {
   username: 'root',
   password: '',
   database: 'mydalart',
-  entities: [],
   synchronize: true,
 }
