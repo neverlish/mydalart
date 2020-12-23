@@ -1,5 +1,6 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent } from "typeorm";
+import { Field, ID, ObjectType } from "@nestjs/graphql"
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent } from "typeorm"
+import { User } from "../user/user.entity"
 
 @ObjectType()
 @Entity('task')
@@ -26,6 +27,10 @@ export class Task {
   @Field(() => Task, { nullable: true })
   @TreeParent()
   parent: Task
+
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.tasks)
+  user: User
 }
 
 @ObjectType()

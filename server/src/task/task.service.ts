@@ -7,11 +7,11 @@ import { Task, TaskList } from './task.entity'
 export class TaskService {
   constructor(
     @InjectRepository(Task)
-    private taskRepository: TreeRepository<Task>
+    private taskRepository: TreeRepository<Task>,
   ) { }
 
   async getTask(id: string): Promise<Task | null> {
-    const result = await this.taskRepository.findOne({ where: { id } })
+    const result = await this.taskRepository.findOne({ where: { id }, relations: ['user'] })
     if (result) {
       const { children } = await this.taskRepository.findDescendantsTree(result)
       const { parent } = await this.taskRepository.findAncestorsTree(result)
@@ -23,9 +23,18 @@ export class TaskService {
   }
 
   async getPublicTaskList(): Promise<TaskList> {
-    // TODO: 태스크들의 parent는 가져오지 못하고 있는 상태
-    const tasks = await this.taskRepository.findTrees()
-    const items = tasks.filter((i) => i.isPublic)
+    const items = await this.taskRepository.find({
+      where: { parent: null, isPublic: true },
+      relations: ['user'],
+    });
+    return { items }
+  }
+
+  async getMyTaskList(): Promise<TaskList> {
+    const items = await this.taskRepository.find({
+      where: { parent: null, user: 1 }, // TODO: ID 바꿔야 함
+      relations: ['user'],
+    });
     return { items }
   }
 }

@@ -21,4 +21,10 @@ export class TaskResolver {
   publicTaskList() {
     return this.taskService.getPublicTaskList()
   }
+
+  // TODO: Authorized 적용 필요
+  @Query(() => TaskList)
+  myTaskList() {
+    return this.taskService.getMyTaskList();
+  }
 }
