@@ -29,9 +29,9 @@ export class TaskService {
     return { items }
   }
 
-  async getMyTaskList(): Promise<TaskList> {
+  async getMyTaskList(userId: number): Promise<TaskList> {
     const items = await this.taskRepository.find({
-      where: { parent: null, user: 1 }, // TODO: ID 바꿔야 함
+      where: { parent: null, user: userId },
       relations: ['user'],
     });
     return { items }

@@ -1,11 +1,15 @@
-import { Args, ArgsType, ID, Query, Resolver, Field } from "@nestjs/graphql"
+import { UseGuards } from "@nestjs/common";
+import { Args, ArgsType, Field, ID, Query, Resolver } from "@nestjs/graphql"
+import { AuthGuard } from "../common/auth.guard"
+import { CurrentUser } from "../common/currentUser.decorator"
+import { User } from "../user/user.entity"
 import { Task, TaskList } from "./task.entity"
 import { TaskService } from "./task.service"
 
 @ArgsType()
 class TaskArgs {
   @Field(() => ID)
-  id: string;
+  id: string
 }
 
 @Resolver()
@@ -22,9 +26,9 @@ export class TaskResolver {
     return this.taskService.getPublicTaskList()
   }
 
-  // TODO: Authorized 적용 필요
+  @UseGuards(new AuthGuard())
   @Query(() => TaskList)
-  myTaskList() {
-    return this.taskService.getMyTaskList();
+  myTaskList(@CurrentUser() user: User) {
+    return this.taskService.getMyTaskList(user.id);
   }
 }
