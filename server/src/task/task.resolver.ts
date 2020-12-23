@@ -1,5 +1,6 @@
-import { Args, ArgsType, ID, Query, Resolver, Field } from "@nestjs/graphql";
-import { Task } from "./task.entity";
+import { Args, ArgsType, ID, Query, Resolver, Field } from "@nestjs/graphql"
+import { Task, TaskList } from "./task.entity"
+import { TaskService } from "./task.service"
 
 @ArgsType()
 class TaskArgs {
@@ -9,8 +10,15 @@ class TaskArgs {
 
 @Resolver()
 export class TaskResolver {
+  constructor(private taskService: TaskService) { }
+
   @Query(() => Task, { nullable: true })
   task(@Args() args: TaskArgs) {
-    return null;
+    return this.taskService.getTask(args.id)
+  }
+
+  @Query(() => TaskList)
+  publicTaskList() {
+    return this.taskService.getPublicTaskList()
   }
 }

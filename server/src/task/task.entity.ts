@@ -7,13 +7,17 @@ import { Column, Entity, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent 
 export class Task {
   @Field(() => ID)
   @PrimaryGeneratedColumn('increment')
-  id: number;
+  id: number
+
+  @Field(() => Boolean)
+  @Column({ type: Boolean })
+  isPublic: boolean
 
   // TODO: Belongs to user
 
   @Field(() => String)
   @Column()
-  text: string;
+  text: string
 
   @Field(() => [Task])
   @TreeChildren()
@@ -21,5 +25,11 @@ export class Task {
 
   @Field(() => Task, { nullable: true })
   @TreeParent()
-  parent: Task;
+  parent: Task
+}
+
+@ObjectType()
+export class TaskList {
+  @Field(() => [Task])
+  items: Task[]
 }
