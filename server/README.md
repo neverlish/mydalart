@@ -6,6 +6,11 @@ $ npm install
 ```
 
 ## Running the app
+
+### Requirements
+- mysql database `mydalart` should be created
+  - `create database mydalart;`
+
 ```bash
 # development
 $ npm run start
