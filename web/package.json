@@ -5,9 +5,12 @@
   "scripts": {
     "dev": "next dev -p 3005",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "typegen": "apollo client:codegen --target typescript --endpoint=http://localhost:3000/graphql --outputFlat --no-addTypename src/types/generated"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.6",
+    "graphql": "^15.4.0",
     "next": "10.0.4",
     "react": "17.0.1",
     "react-dom": "17.0.1"
@@ -15,6 +18,7 @@
   "devDependencies": {
     "@types/node": "^14.14.14",
     "@types/react": "^17.0.0",
+    "apollo": "^2.32.0",
     "typescript": "^4.1.3"
   }
 }
