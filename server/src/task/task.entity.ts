@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from "@nestjs/graphql"
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent } from "typeorm"
 import { User } from "../user/user.entity"
 
-@ObjectType()
+@ObjectType('TaskDetail')
 @Entity('task')
 @Tree('nested-set')
 export class Task {
@@ -13,8 +13,6 @@ export class Task {
   @Field(() => Boolean)
   @Column({ type: Boolean })
   isPublic: boolean
-
-  // TODO: Belongs to user
 
   @Field(() => String)
   @Column()
@@ -34,7 +32,22 @@ export class Task {
 }
 
 @ObjectType()
+class TaskListItem {
+  @Field(() => ID)
+  id: number
+
+  @Field(() => Boolean)
+  isPublic: boolean
+
+  @Field(() => String)
+  text: string
+
+  @Field(() => User)
+  user: User
+}
+
+@ObjectType()
 export class TaskList {
-  @Field(() => [Task])
-  items: Task[]
+  @Field(() => [TaskListItem])
+  items: TaskListItem[]
 }
