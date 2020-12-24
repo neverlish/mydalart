@@ -32,18 +32,21 @@ export class Task {
 }
 
 @ObjectType()
-class TaskListItem {
+class TaskListBaseItem {
   @Field(() => ID)
   id: number
 
-  @Field(() => Boolean)
-  isPublic: boolean
-
   @Field(() => String)
   text: string
+}
 
+@ObjectType()
+class TaskListItem extends TaskListBaseItem {
   @Field(() => User)
   user: User
+
+  @Field(() => [TaskListBaseItem])
+  children: TaskListBaseItem[]
 }
 
 @ObjectType()

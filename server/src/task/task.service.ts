@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { TreeRepository } from 'typeorm'
+import { In, TreeRepository } from 'typeorm'
 import { Task, TaskList } from './task.entity'
 
 @Injectable()
@@ -22,18 +22,32 @@ export class TaskService {
   }
 
   async getPublicTaskList(): Promise<TaskList> {
-    const items = await this.taskRepository.find({
-      where: { parent: null, isPublic: true },
-      relations: ['user'],
-    });
+    const trees = await this.findTreesWithUserAttached()
+    const items = trees.filter((task) => task.isPublic)
+
     return { items }
   }
 
   async getMyTaskList(userId: number): Promise<TaskList> {
-    const items = await this.taskRepository.find({
-      where: { parent: null, user: userId },
-      relations: ['user'],
-    });
+    const trees = await this.findTreesWithUserAttached()
+    const items = trees.filter((task) => task.user.id === userId)
+
     return { items }
+  }
+
+  private async findTreesWithUserAttached(): Promise<Task[]> {
+    const trees = await this.taskRepository.findTrees()
+
+    const rootTasks = await this.taskRepository.find({
+      where: { id: In(trees.map((task) => task.id)) },
+      relations: ['user'],
+    })
+
+    return trees.map((task) => {
+      return {
+        ...task,
+        ...rootTasks.find((t) => t.id == task.id),
+      }
+    })
   }
 }
