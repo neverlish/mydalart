@@ -9,10 +9,11 @@ import { SignInArgs, SignInResult, SignUpArgs, SignUpResult } from './user.type'
 @Resolver()
 export class UserResolver {
   constructor(private userService: UserService) { }
+
   @UseGuards(new AuthGuard())
   @Query(() => User)
   myUser(@CurrentUser() user: User) {
-    return this.userService.getMyUser(user.id)
+    return this.userService.getUserById(user.id)
   }
 
   @Mutation(() => SignInResult)

@@ -11,7 +11,7 @@ export class UserService {
     private userRepository: Repository<User>
   ) { }
 
-  async getMyUser(userId: number): Promise<User> {
+  async getUserById(userId: number): Promise<User> {
     return await this.userRepository.findOne({ where: { id: userId } })
   }
 
@@ -20,14 +20,14 @@ export class UserService {
     if (user) {
       return { token: user.token }
     } else {
-      throw new BadRequestException('존재하지 않는 계정입니다.')
+      throw new BadRequestException('Not found account.')
     }
   }
 
   async signUp(email: string): Promise<SignUpResult> {
     const user = await this.getUserByEmail(email)
     if (user) {
-      throw new BadRequestException('이미 존재하는 계정입니다.')
+      throw new BadRequestException('Already exists account.')
     } else {
       const newUser = await this.userRepository.create({ email })
       await this.userRepository.save(newUser)
@@ -35,7 +35,7 @@ export class UserService {
     }
   }
 
-  private async getUserByEmail(email: string): Promise<User | null> {
+  async getUserByEmail(email: string): Promise<User | null> {
     return await this.userRepository.findOne({ where: { email } })
   }
 }
