@@ -11,10 +11,15 @@ export interface PublicTaskList_publicTaskList_items_user {
   email: string;
 }
 
+export interface PublicTaskList_publicTaskList_items_children {
+  text: string;
+}
+
 export interface PublicTaskList_publicTaskList_items {
   id: string;
   text: string;
   user: PublicTaskList_publicTaskList_items_user;
+  children: PublicTaskList_publicTaskList_items_children[];
 }
 
 export interface PublicTaskList_publicTaskList {
