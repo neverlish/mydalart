@@ -2,6 +2,21 @@ import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@
 import { GqlExecutionContext } from '@nestjs/graphql';
 import * as jwt from 'jsonwebtoken';
 
+export async function validateToken(auth: string) {
+  if (auth.split(' ')[0] !== 'Bearer') {
+    throw new ForbiddenException('Invalid token');
+  }
+
+  const token = auth.split(' ')[1];
+  try {
+    const decoded = await jwt.verify(token, 'SECRET'); // TODO: 바꿔야 함
+    return decoded;
+  } catch (err) {
+    const message = 'Token error: ' + (err.message || err.name);
+    throw new ForbiddenException(message);
+  }
+}
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -12,23 +27,8 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    req.user = await this.validateToken(req.headers.authorization);
+    req.user = await validateToken(req.headers.authorization);
 
     return true;
-  }
-
-  async validateToken(auth: string) {
-    if (auth.split(' ')[0] !== 'Bearer') {
-      throw new ForbiddenException('Invalid token');
-    }
-
-    const token = auth.split(' ')[1];
-    try {
-      const decoded = await jwt.verify(token, 'SECRET'); // TODO: 바꿔야 함
-      return decoded;
-    } catch (err) {
-      const message = 'Token error: ' + (err.message || err.name);
-      throw new ForbiddenException(message);
-    }
   }
 }
