@@ -18,17 +18,18 @@ export class TaskService {
       relations: ['user'],
     })
     if (task) {
-      const { children } = await this.taskRepository.findDescendantsTree(task)
-      const { parent } = await this.taskRepository.findAncestorsTree(task)
-      return {
-        ...task,
-        children,
-        parent,
-        isMine: task.user.id === userId,
-      };
-    } else {
-      throw new NotFoundException('찾을 수 없는 태스크입니다.');
+      if (task.isPublic || task.user.id === userId) {
+        const { children } = await this.taskRepository.findDescendantsTree(task)
+        const { parent } = await this.taskRepository.findAncestorsTree(task)
+        return {
+          ...task,
+          children,
+          parent,
+          isMine: task.user.id === userId,
+        };
+      }
     }
+    throw new NotFoundException('찾을 수 없는 태스크입니다.');
   }
 
   async getPublicTaskList(userId?: number): Promise<TaskList> {
