@@ -20,7 +20,7 @@ export const GetCurrentUser = createParamDecorator(
 
     try {
 
-      return await validateToken(req.headers.authorization);
+      return validateToken(req.headers.authorization);
     } catch {
       return null
     }
