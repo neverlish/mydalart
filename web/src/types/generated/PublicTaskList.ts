@@ -12,12 +12,14 @@ export interface PublicTaskList_publicTaskList_items_user {
 }
 
 export interface PublicTaskList_publicTaskList_items_children {
+  id: string;
   text: string;
 }
 
 export interface PublicTaskList_publicTaskList_items {
   id: string;
   text: string;
+  isMine: boolean;
   user: PublicTaskList_publicTaskList_items_user;
   children: PublicTaskList_publicTaskList_items_children[];
 }

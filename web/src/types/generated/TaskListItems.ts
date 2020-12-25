@@ -12,12 +12,14 @@ export interface TaskListItems_items_user {
 }
 
 export interface TaskListItems_items_children {
+  id: string;
   text: string;
 }
 
 export interface TaskListItems_items {
   id: string;
   text: string;
+  isMine: boolean;
   user: TaskListItems_items_user;
   children: TaskListItems_items_children[];
 }

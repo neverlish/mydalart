@@ -15,7 +15,7 @@ export default function TaskListItem({ task }: TaskListItemProps) {
         extra={<Link href={`/tasks/${task.id}`}>Go</Link>}
       >
         {task.children.map((t) =>
-          <Card.Grid key={t.text}>{t.text}</Card.Grid>
+          <Card.Grid key={t.id}>{t.text}</Card.Grid>
         )}
       </Card>
     </Col>

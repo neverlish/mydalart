@@ -8,10 +8,12 @@ const PUBLIST_TASK_LIST_QUERY = gql`
     items {
       id
       text
+      isMine
       user {
         email
       }
       children {
+        id
         text
       }
     }
@@ -25,7 +27,7 @@ const PUBLIST_TASK_LIST_QUERY = gql`
 `
 
 export default function Home() {
-  const { loading, error, data } = useQuery<PublicTaskList>(PUBLIST_TASK_LIST_QUERY)
+  const { loading, data } = useQuery<PublicTaskList>(PUBLIST_TASK_LIST_QUERY)
 
   function render() {
     if (loading) {
