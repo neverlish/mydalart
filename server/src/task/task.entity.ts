@@ -29,6 +29,9 @@ export class Task {
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.tasks)
   user: User
+
+  @Field(() => Boolean)
+  isMine?: Boolean
 }
 
 @ObjectType()
@@ -47,6 +50,9 @@ class TaskListItem extends TaskListBaseItem {
 
   @Field(() => [TaskListBaseItem])
   children: TaskListBaseItem[]
+
+  @Field(() => Boolean)
+  isMine?: Boolean
 }
 
 @ObjectType()

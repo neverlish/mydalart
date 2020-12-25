@@ -10,32 +10,40 @@ export class TaskService {
     private taskRepository: TreeRepository<Task>,
   ) { }
 
-  async getTask(id: string): Promise<Task> {
-    const result = await this.taskRepository.findOne({ where: { id }, relations: ['user'] })
-    if (result) {
-      const { children } = await this.taskRepository.findDescendantsTree(result)
-      const { parent } = await this.taskRepository.findAncestorsTree(result)
-      return { ...result, children, parent };
+  async getTask(id: number, userId?: number): Promise<Task> {
+    const task = await this.taskRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    })
+    if (task) {
+      const { children } = await this.taskRepository.findDescendantsTree(task)
+      const { parent } = await this.taskRepository.findAncestorsTree(task)
+      return {
+        ...task,
+        children,
+        parent,
+        isMine: task.user.id === userId,
+      };
     } else {
       throw new NotFoundException('찾을 수 없는 태스크입니다.');
     }
   }
 
-  async getPublicTaskList(): Promise<TaskList> {
-    const trees = await this.findTreesWithUserAttached()
+  async getPublicTaskList(userId?: number): Promise<TaskList> {
+    const trees = await this.findTreesWithUserAttached(userId) // TODO: querybuilder로 개선해야 함
     const items = trees.filter((task) => task.isPublic)
 
     return { items }
   }
 
   async getMyTaskList(userId: number): Promise<TaskList> {
-    const trees = await this.findTreesWithUserAttached()
+    const trees = await this.findTreesWithUserAttached(userId) // TODO: querybuilder로 개선해야 함
     const items = trees.filter((task) => task.user.id === userId)
 
     return { items }
   }
 
-  private async findTreesWithUserAttached(): Promise<Task[]> {
+  private async findTreesWithUserAttached(userId?: number): Promise<Task[]> {
     const trees = await this.taskRepository.findTrees()
 
     const rootTasks = await this.taskRepository.find({
@@ -44,9 +52,11 @@ export class TaskService {
     })
 
     return trees.map((task) => {
+      const rootTask = rootTasks.find((t) => t.id == task.id)
       return {
         ...task,
-        ...rootTasks.find((t) => t.id == task.id),
+        user: rootTask.user,
+        isMine: rootTask.user.id === userId,
       }
     })
   }
