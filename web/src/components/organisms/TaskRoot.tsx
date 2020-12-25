@@ -1,12 +1,13 @@
 import { Card, Col } from 'antd'
 import Link from 'next/link'
 import { TaskListItems_items as Task } from '../../types/generated/TaskListItems'
+import TaskCardList from './TaskCardList'
 
 interface TaskListItemProps {
   task: Task
 }
 
-export default function TaskListItem({ task }: TaskListItemProps) {
+export default function TaskRoot({ task }: TaskListItemProps) {
   return (
     <Col span={8} style={{ marginTop: 24, textAlign: 'center' }}>
       <Card
@@ -14,9 +15,7 @@ export default function TaskListItem({ task }: TaskListItemProps) {
         title={`${task.text} by ${task.user.email}`}
         extra={<Link href={`/tasks/${task.id}`}>Go</Link>}
       >
-        {task.children.map((t) =>
-          <Card.Grid key={t.id}>{t.text}</Card.Grid>
-        )}
+        <TaskCardList task={task} rootTask={task} />
       </Card>
     </Col>
   )
