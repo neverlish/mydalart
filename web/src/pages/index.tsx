@@ -1,7 +1,8 @@
-import { LoadingOutlined } from '@ant-design/icons';
-import { gql, useQuery } from "@apollo/client";
-import TaskRootList from "../components/templates/TaskRootList";
-import { PublicTaskList } from '../types/generated/PublicTaskList';
+import { LoadingOutlined } from '@ant-design/icons'
+import { gql, useQuery } from "@apollo/client"
+import { Typography } from 'antd'
+import TaskRootList from "../components/templates/TaskRootList"
+import { PublicTaskList } from '../types/generated/PublicTaskList'
 
 const PUBLIST_TASK_LIST_QUERY = gql`
   fragment TaskListItems on TaskList {
@@ -37,6 +38,7 @@ export default function Home() {
   }
   return (
     <div>
+      <Typography.Title level={2}>All tasks</Typography.Title>
       {render()}
     </div>
   )
