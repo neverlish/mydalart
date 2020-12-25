@@ -1,16 +1,16 @@
 import { Row } from 'antd';
 import { TaskListItems_items as Task } from '../../types/generated/TaskListItems';
-import TaskListItem from '../organisms/TaskListItem';
+import TaskRoot from '../organisms/TaskRoot';
 
-interface TaskListProps {
+interface TaskRootListProps {
   items: Task[]
 }
 
-export default function TaskList({ items }: TaskListProps) {
+export default function TaskRootList({ items }: TaskRootListProps) {
   return (
     <Row gutter={24}>
       {items.map((task) =>
-        <TaskListItem task={task} key={task.id} />
+        <TaskRoot task={task} key={task.id} />
       )}
     </Row>
   )

@@ -1,6 +1,7 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
+import TaskDetail from '../../components/templates/TaskDetail'
 import { GetTaskDetail } from '../../types/generated/GetTaskDetail'
 
 const TASK_DETAIL_QUERY = gql`
@@ -46,6 +47,6 @@ export default function TaskDetailPage() {
   }
 
   return (
-    <div></div>
+    <TaskDetail task={data.task} />
   )
 }

@@ -1,6 +1,6 @@
 import { LoadingOutlined } from '@ant-design/icons';
 import { gql, useQuery } from "@apollo/client";
-import TaskList from "../components/templates/TaskList";
+import TaskRootList from "../components/templates/TaskRootList";
 import { PublicTaskList } from '../types/generated/PublicTaskList';
 
 const PUBLIST_TASK_LIST_QUERY = gql`
@@ -33,7 +33,7 @@ export default function Home() {
     if (loading) {
       return <LoadingOutlined spin />
     }
-    return <TaskList items={data.publicTaskList.items} />
+    return <TaskRootList items={data.publicTaskList.items} />
   }
   return (
     <div>
