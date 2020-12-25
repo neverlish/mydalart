@@ -1,16 +1,11 @@
-import { UseGuards } from "@nestjs/common";
-import { Args, ArgsType, Field, ID, Query, Resolver } from "@nestjs/graphql"
+import { UseGuards } from "@nestjs/common"
+import { Args, Mutation, Query, Resolver } from "@nestjs/graphql"
 import { AuthGuard } from "../common/auth.guard"
 import { CurrentUser, GetCurrentUser } from "../common/currentUser.decorator"
 import { User } from "../user/user.entity"
 import { Task, TaskList } from "./task.entity"
 import { TaskService } from "./task.service"
-
-@ArgsType()
-class TaskArgs {
-  @Field(() => ID)
-  id: string
-}
+import { CreateTaskInput, TaskArgs } from "./task.type"
 
 @Resolver()
 export class TaskResolver {
@@ -29,6 +24,12 @@ export class TaskResolver {
   @UseGuards(new AuthGuard())
   @Query(() => TaskList)
   myTaskList(@CurrentUser() user: User) {
-    return this.taskService.getMyTaskList(user.id);
+    return this.taskService.getMyTaskList(user.id)
+  }
+
+  @UseGuards(new AuthGuard())
+  @Mutation(() => Task)
+  createTask(@Args('input') input: CreateTaskInput, @CurrentUser() user: User) {
+    return this.taskService.createTask(input, user)
   }
 }

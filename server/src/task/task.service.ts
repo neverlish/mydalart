@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, TreeRepository } from 'typeorm'
+import { User } from '../user/user.entity'
 import { Task, TaskList } from './task.entity'
+import { CreateTaskInput, CreateTaskInputItem } from './task.type'
 
 @Injectable()
 export class TaskService {
@@ -42,6 +44,43 @@ export class TaskService {
 
     return { items }
   }
+
+  async createTask(input: CreateTaskInput, user: User) {
+    const rootTask = new Task()
+    rootTask.user = user
+    rootTask.isPublic = input.isPublic
+    rootTask.text = input.text
+
+    await this.taskRepository.save(rootTask)
+
+    await this.createTaskChildren(rootTask, user, input.children)
+
+    return await this.getTask(rootTask.id)
+  }
+
+  private async createTaskChildren(parentTask: Task, user: User, children?: CreateTaskInputItem[]) {
+    if (!children) {
+      return;
+    }
+
+    const createdChildren = children.map((child) => {
+      const childCreated = new Task()
+      childCreated.user = user
+      childCreated.isPublic = parentTask.isPublic
+      childCreated.text = child.text
+      childCreated.parent = parentTask
+      return childCreated
+    })
+
+    await this.taskRepository.save(createdChildren)
+
+    const promiseChildren = createdChildren.map(
+      async (i, j) =>
+        await this.createTaskChildren(i, user, children[j].children)
+    )
+    await Promise.all(promiseChildren)
+  }
+
 
   private async findTreesWithUserAttached(userId?: number): Promise<Task[]> {
     const trees = await this.taskRepository.findTrees()
