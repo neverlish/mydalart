@@ -1,14 +1,28 @@
-import { useMemo } from 'react'
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { useMemo } from 'react';
+import { LOCAL_STORAGE_LOGIN_TOKEN_KEY } from '../components/templates/Header';
 
 let apolloClient
 
 const uri = 'http://localhost:3000/graphql'
 
 function createApolloClient() {
+  const httpLink = createHttpLink({ uri });
+
+  const authLink = setContext((_, { headers }) => {
+    const token = localStorage.getItem(LOCAL_STORAGE_LOGIN_TOKEN_KEY);
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : "",
+      }
+    }
+  });
+
   return new ApolloClient({
     ssrMode: true,
-    link: new HttpLink({ uri }),
+    link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
   })
 }
