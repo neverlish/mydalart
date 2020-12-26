@@ -36,6 +36,7 @@ export interface GetTaskDetail_task_children {
 export interface GetTaskDetail_task {
   id: string;
   text: string;
+  isPublic: boolean;
   isMine: boolean;
   user: GetTaskDetail_task_user;
   parent: GetTaskDetail_task_parent | null;

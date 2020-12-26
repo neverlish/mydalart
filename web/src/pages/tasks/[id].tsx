@@ -1,5 +1,6 @@
-import { LoadingOutlined } from '@ant-design/icons'
+import { LoadingOutlined, LockOutlined } from '@ant-design/icons'
 import { gql, useQuery } from '@apollo/client'
+import { Typography } from 'antd'
 import { useRouter } from 'next/router'
 import TaskDetail from '../../components/templates/TaskDetail'
 import { GetTaskDetail } from '../../types/generated/GetTaskDetail'
@@ -9,6 +10,7 @@ const TASK_DETAIL_QUERY = gql`
     task(id: $id) {
       id
       text
+      isPublic
       isMine
       user {
         email
@@ -47,6 +49,12 @@ export default function TaskDetailPage() {
   }
 
   return (
-    <TaskDetail task={data.task} />
+    <>
+      <Typography.Title level={2}>
+        {data.task.text}
+        {!data.task.isPublic && <LockOutlined style={{ marginLeft: '10px' }} />}
+      </Typography.Title>
+      <TaskDetail task={data.task} />
+    </>
   )
 }
