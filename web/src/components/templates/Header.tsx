@@ -1,4 +1,4 @@
-import { UserOutlined } from '@ant-design/icons';
+import { PlusOutlined, UserOutlined } from '@ant-design/icons';
 import { gql, useMutation } from '@apollo/client';
 import { Alert, Input, Layout, Modal } from 'antd';
 import 'antd/dist/antd.css';
@@ -32,9 +32,14 @@ export default function Header() {
 
   function renderUserIcon() {
     if (loggedIn) {
-      return <Link href='/my'>
-        <UserOutlined style={{ float: 'right', marginTop: 22 }} />
-      </Link>
+      return <>
+        <Link href='/my'>
+          <UserOutlined style={{ float: 'right', marginTop: 22 }} />
+        </Link>
+        <Link href='/addTask'>
+          <PlusOutlined style={{ float: 'right', margin: '22px 20px 0 0 ' }} />
+        </Link>
+      </>
     } else {
       return <UserOutlined
         style={{ float: 'right', marginTop: 22 }}

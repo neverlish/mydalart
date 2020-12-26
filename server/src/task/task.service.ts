@@ -56,7 +56,7 @@ export class TaskService {
 
     await this.createTaskChildren(rootTask, user, input.children)
 
-    return await this.getTask(rootTask.id)
+    return await this.getTask(rootTask.id, user.id)
   }
 
   private async createTaskChildren(parentTask: Task, user: User, children?: CreateTaskInputItem[]) {
