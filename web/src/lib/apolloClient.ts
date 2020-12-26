@@ -5,7 +5,9 @@ import { LOCAL_STORAGE_LOGIN_TOKEN_KEY } from '../components/templates/Header';
 
 let apolloClient
 
-const uri = 'http://localhost:3000/graphql'
+const uri = process.env.NODE_ENV === 'production'
+  ? 'https://mydalart-server.herokuapp.com/graphql'
+  : 'http://localhost:3000/graphql'
 
 function createApolloClient() {
   const httpLink = createHttpLink({ uri });
