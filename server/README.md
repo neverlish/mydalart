@@ -8,8 +8,10 @@ $ npm install
 ## Running the app
 
 ### Requirements
-- mysql database `mydalart` should be created
-  - `create database mydalart;`
+- postgres role ` mydalart` should exists
+  - `createuser mydalart`
+- postgres database `mydalart` should exists
+  - `createdb mydalart;`
 
 ```bash
 # development
