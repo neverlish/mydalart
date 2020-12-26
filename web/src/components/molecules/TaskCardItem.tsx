@@ -1,14 +1,16 @@
-import { Card, Col } from 'antd';
-import { GetTaskDetail_task_children_children as TaskChildBase } from '../../types/generated/GetTaskDetail';
+import { Card, Col, Input } from 'antd'
+import { GetTaskDetail_task_children_children as TaskChildBase } from '../../types/generated/GetTaskDetail'
 
 export interface TaskChild extends TaskChildBase {
   children?: TaskChildBase[],
 }
 
 interface TaskCardItemProp {
-  rootTaskId: string;
-  taskId: string;
-  taskList: TaskChild[];
+  rootTaskId: string
+  taskId: string
+  taskList: TaskChild[]
+  colSpan: number
+  updateTask?: (id: string, text: string) => void
 }
 
 function getBackgroundColor(isRenderTask: boolean, rootTaskId: string, taskId: string) {
@@ -24,21 +26,34 @@ function getBackgroundColor(isRenderTask: boolean, rootTaskId: string, taskId: s
   return '#fff'
 }
 
-export default function TaskCardItem({ taskList, rootTaskId, taskId }: TaskCardItemProp) {
-  return <Col>
+export default function TaskCardItem({ taskList, rootTaskId, taskId, updateTask, colSpan }: TaskCardItemProp) {
+
+  function renderTaskText(task: TaskChild) {
+    if (updateTask) {
+      return <Input
+        style={{ borderBottom: '1.5px solid #bbb' }}
+        bordered={false}
+        value={task.text}
+        onChange={(e) => updateTask(task.id, e.target.value)}
+      />
+    }
+    return task.text
+  }
+
+  return <Col span={colSpan}>
     {
-      taskList.map((renderTask, i) => {
-        const isRenderTask = renderTask.id === taskId
+      taskList.map((task, i) => {
+        const isRootTask = task.id === taskId
 
         return <Card.Grid
           style={{
-            backgroundColor: getBackgroundColor(isRenderTask, rootTaskId, taskId),
+            backgroundColor: getBackgroundColor(isRootTask, rootTaskId, taskId),
             textAlign: 'center',
-            fontWeight: isRenderTask ? 'bold' : 'normal',
+            fontWeight: isRootTask ? 'bold' : 'normal',
             height: '130px',
           }}
-          key={`${renderTask.id}-${i}`}>
-          {renderTask.text}
+          key={`${task.id}-${i}`}>
+          {renderTaskText(task)}
         </Card.Grid>
       })
     }

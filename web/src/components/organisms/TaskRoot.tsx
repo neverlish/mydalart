@@ -15,7 +15,7 @@ export default function TaskRoot({ task }: TaskListItemProps) {
         title={`${task.text} by ${task.user.email}`}
         extra={<Link href={`/tasks/${task.id}`}>Go</Link>}
       >
-        <TaskCardList task={task} rootTask={task} />
+        <TaskCardList task={task} rootTask={task} colSpan={24} />
       </Card>
     </Col>
   )

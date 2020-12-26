@@ -1,10 +1,15 @@
 import { Row } from 'antd';
-import { GetTaskDetail_task as Task } from '../../types/generated/GetTaskDetail';
 import TaskCardItem, { TaskChild } from '../molecules/TaskCardItem';
 
-interface TaskCardListProps {
-  task; // TODO: 타입 수정해야 함
-  rootTask;
+export interface TaskCardListPropsTask extends TaskChild {
+  children?: Array<TaskChild & { children?: TaskChild[] }>
+}
+
+export interface TaskCardListProps {
+  task: TaskCardListPropsTask
+  rootTask: TaskChild
+  colSpan: number
+  updateTask?: (id: string, text: string) => void;
 }
 
 function makeTaskList(task: TaskChild): TaskChild[] {
@@ -25,7 +30,7 @@ function makeTaskList(task: TaskChild): TaskChild[] {
   ]
 }
 
-export default function TaskCardList({ task, rootTask }: TaskCardListProps) {
+export default function TaskCardList({ task, rootTask, updateTask, colSpan }: TaskCardListProps) {
   if (!task.children || task.children.length === 0) {
     return <></>; // TODO: 이거 수정해야 함
   }
@@ -34,16 +39,21 @@ export default function TaskCardList({ task, rootTask }: TaskCardListProps) {
 
   if (!task.children[0].children) {
     return <TaskCardItem
+      colSpan={colSpan}
       taskList={taskList}
       rootTaskId={rootTask.id}
-      taskId={task.id} />
+      taskId={task.id}
+      updateTask={updateTask}
+    />
   }
   return <Row>
     {taskList.map((t, i) =>
       <TaskCardList
+        colSpan={colSpan}
         task={t}
         key={`${t.id}-${i}`}
         rootTask={rootTask}
+        updateTask={updateTask}
       />
     )}
   </Row>

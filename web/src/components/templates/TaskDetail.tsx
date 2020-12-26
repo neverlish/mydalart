@@ -13,7 +13,7 @@ export default function TaskDetail({ task }: TaskDetailProps) {
       title={task.text}
       extra={task.user.email}
     >
-      <TaskCardList task={task} rootTask={task} />
+      <TaskCardList task={task} rootTask={task} colSpan={8} />
     </Card>
   )
 }
