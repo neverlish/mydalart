@@ -29,7 +29,7 @@ export class TaskService {
         };
       }
     }
-    throw new NotFoundException('찾을 수 없는 태스크입니다.');
+    throw new NotFoundException('Not found task');
   }
 
   async getPublicTaskList(userId?: number): Promise<TaskList> {

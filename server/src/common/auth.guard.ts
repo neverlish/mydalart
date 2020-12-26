@@ -9,7 +9,7 @@ export function validateToken(auth: string) {
 
   const token = auth.split(' ')[1]
   try {
-    const decoded = jwt.verify(token, 'SECRET') // TODO: 바꿔야 함
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
     return decoded
   } catch (err) {
     const message = 'Token error: ' + (err.message || err.name)

@@ -25,7 +25,7 @@ export class User {
         id,
         email,
       },
-      'SECRET', // TODO: 감춰야 함
+      process.env.JWT_SECRET,
       { expiresIn: '7d' },
     );
   }
